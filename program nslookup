@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+import subprocess
+import time
+
+# Daftar domain yang ingin dicek
+domains = ["google.com", "yahoo.com", "netacad.com", "example.com", "facebook.com"]
+
+print("🔍 Memulai pengecekan DNS untuk beberapa domain...\n")
+
+# Loop untuk mengecek setiap domain
+for domain in domains:
+    print(f"Memeriksa {domain}...")
+    result = subprocess.run(["nslookup", domain], capture_output=True, text=True)
+   
+    # Analisis hasil nslookup
+    if "Address:" in result.stdout:
+        ip_addresses = [line.split("Address:")[-1].strip() for line in result.stdout.splitlines() if "Address:" in line]
+        print(f"✅ {domain} tersambung ke: {', '.join(ip_addresses)}\n")
+    else:
+        print(f"❌ {domain} tidak dapat diresolusi.\n")
+   
+    time.sleep(1)  # jeda agar output mudah dibaca
+
+print("✅ Pengecekan selesai.")
